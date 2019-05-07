@@ -33,4 +33,8 @@ Route::get('email/verify', 'Auth\VerificationController@show')->name('verificati
 Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
 Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
+//用户路由
 Route::resource('users','UsersController',['only'=>['show','update','edit']]);
+
+//话题路由
+Route::resource('topics','TopicsController',['only'=>['index','create','store','update','edit','destroy']]);
