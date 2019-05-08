@@ -4,60 +4,31 @@ namespace App\Observers;
 
 use App\Models\Topic;
 
+// creating, created, updating, updated, saving,
+// saved,  deleting, deleted, restoring, restored
+
 class TopicObserver
 {
-    /**
-     * Handle the topic "created" event.
-     *
-     * @param  \App\Models\Topic  $topic
-     * @return void
-     */
-    public function created(Topic $topic)
+    public function saving(Topic $topic)
     {
-        //
+       // 生成话题摘录
+        $topic->excerpt = make_excerpt($topic->body);
     }
 
-    /**
-     * Handle the topic "updated" event.
-     *
-     * @param  \App\Models\Topic  $topic
-     * @return void
-     */
-    public function updated(Topic $topic)
+    public function saved(Topic $topic)
     {
-        //
+
+//        if(! $topic->slug){
+//
+//            dispatch(new TranslateSlug($topic));
+//
+//        }
+
     }
 
-    /**
-     * Handle the topic "deleted" event.
-     *
-     * @param  \App\Models\Topic  $topic
-     * @return void
-     */
     public function deleted(Topic $topic)
     {
-        //
+        \DB::table('replies')->where('topic_id', $topic->id)->delete();
     }
 
-    /**
-     * Handle the topic "restored" event.
-     *
-     * @param  \App\Models\Topic  $topic
-     * @return void
-     */
-    public function restored(Topic $topic)
-    {
-        //
-    }
-
-    /**
-     * Handle the topic "force deleted" event.
-     *
-     * @param  \App\Models\Topic  $topic
-     * @return void
-     */
-    public function forceDeleted(Topic $topic)
-    {
-        //
-    }
 }

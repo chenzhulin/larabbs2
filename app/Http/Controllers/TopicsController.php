@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TopicRequest;
+use App\Models\Category;
 use App\Models\Topic;
 use Illuminate\Http\Request;
-
+use Auth;
 class TopicsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth',['except'=>['index','show']]);
     }
 
     public function index(Request $request,Topic $topic)
@@ -17,18 +19,24 @@ class TopicsController extends Controller
         $topics = $topic->withOrder($request->order)->paginate(20);
         return view('topics.index',compact('topics'));
     }
-    public function show(Topic $topic)
+    public function create(Topic $topic)
+    {
+        $categories = Category::all();
+        return view('topics.create_and_edit',compact('topic','categories'));
+    }
+
+    public function show(Request $request,Topic $topic)
     {
         return view('topics.show',compact('topic'));
     }
-    public function create()
-    {
-        return view('topics.create_and_edit');
-    }
 
-    public function store()
+
+    public function store( TopicRequest $topicRequest,Topic $topic)
     {
-        return redirect()->route('topics.show');
+        $topic->fill($topicRequest->all());
+        $topic->user_id = Auth::id();
+        $topic->save();
+        return redirect()->route('topics.show',$topic->id)->with('success','帖子创建成功！');
     }
 
     public function edit(Topic $topic)
