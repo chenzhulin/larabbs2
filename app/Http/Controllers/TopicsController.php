@@ -42,12 +42,16 @@ class TopicsController extends Controller
 
     public function edit(Topic $topic)
     {
-        return view('topics.create_and_edit');
+        $this->authorize('update',$topic);
+        $categories = Category::all();
+        return view('topics.create_and_edit',compact('topic','categories'));
     }
 
-    public function update(Topic $topic)
+    public function update(TopicRequest $request,Topic $topic)
     {
-        return redirect()->route('topics.show');
+        $this->authorize('update',$topic);
+        $topic->update($request->all());
+        return redirect()->route('topics.show',$topic->id)->with('success','帖子修改成功！');
     }
 
     public function destroy(Topic $topic)
