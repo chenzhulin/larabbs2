@@ -26,7 +26,7 @@ class TopicsController extends Controller
         return view('topics.create_and_edit',compact('topic','categories'));
     }
 
-    public function show(Request $request,Topic $topic)
+    public function show(Topic $topic)
     {
         return view('topics.show',compact('topic'));
     }
@@ -55,6 +55,7 @@ class TopicsController extends Controller
         return redirect()->route('topics.index');
     }
 
+    //图片上传
     public function uploadImage( Request $request,ImageUploadHandler $uploader)
     {
         //初始化返回数据
